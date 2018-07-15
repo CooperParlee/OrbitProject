@@ -142,7 +142,7 @@ public class StellarMovement : MonoBehaviour
                 print("why are you running?");
                 currentearthdegree = -x / DEGREEACC * ORBITDEGREES;
                 float ydifferential = Mathf.Sin((currentearthdegree/90)) * EARTHORBITRADII;
-                float xdifferential = Mathf.Cos((currentearthdegree/90)) * EARTHORBITRADII;
+                float xdifferential = Mathf.Cos((currentearthdegree/90)) * -EARTHORBITRADII;
                 earth.transform.position = sun.transform.position + new Vector3(xdifferential, 0, ydifferential);                
             }
         }
