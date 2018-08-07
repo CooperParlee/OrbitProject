@@ -1479,13 +1479,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1119138327}
-  m_LocalRotation: {x: -0.0066451854, y: -0.97852415, z: 0.2035333, w: -0.03194796}
+  m_LocalRotation: {x: 0.006769546, y: 0.97850436, z: -0.20352924, w: 0.032545842}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1652362959}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 23.5, y: -183.74, z: 0}
+  m_LocalEulerAnglesHint: {x: 23.5, y: 176.19, z: 0}
 --- !u!23 &1119138329
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2695,7 +2695,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1956922096}
-        m_MethodName: onValueChanged
+        m_MethodName: OnValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2862,17 +2862,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80b3ab598a998d479bcd322fddbabbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timescale: 1
-  earth: {fileID: 1119138327}
-  sun: {fileID: 509373827}
-  moon: {fileID: 290648920}
+  earthObj: {fileID: 1119138327}
+  sunObj: {fileID: 509373827}
+  moonObj: {fileID: 290648920}
   cam: {fileID: 319464894}
   button: {fileID: 907512856}
   daygui: {fileID: 1430934542}
   dropdown: {fileID: 1891370599}
   toggle: {fileID: 709755552}
   slidertext: {fileID: 1589194941}
-  paused: 0
   stoporbitalprecision: 0
 --- !u!222 &1956922098
 CanvasRenderer:
