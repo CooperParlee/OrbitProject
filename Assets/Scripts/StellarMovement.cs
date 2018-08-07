@@ -77,9 +77,13 @@ public class StellarMovement : MonoBehaviour
 
         StarSystem sol = gameObject.AddComponent(typeof(StarSystem)) as StarSystem;
         CelestialObject earth = earthObj.AddComponent<CelestialObject>() as CelestialObject;
+        CelestialObject moon = moonObj.AddComponent<CelestialObject>() as CelestialObject;
+
         //StarSystem sol = new StarSystem(sunObj);
         //CelestialObject earth = new CelestialObject(earthObj, sunObj, EARTHDAYPROPORTIONAL, EARTHORBITPROPORTIONAL, EARTHAPOAPSIS, EARTHPERIAPSIS);
-        CelestialObject moon = new CelestialObject(moonObj, earthObj, MOONDAYPROPORTIONAL, MOONORBITPROPORTIONAL, MOONAPOAPSIS, MOONPERIAPSIS);
+
+        moon.BuildCelestialObject(moonObj, earthObj, MOONDAYPROPORTIONAL, MOONORBITPROPORTIONAL, MOONAPOAPSIS, MOONPERIAPSIS);
+        earth.BuildCelestialObject(earthObj, sunObj, EARTHDAYPROPORTIONAL, EARTHORBITPROPORTIONAL, EARTHAPOAPSIS, EARTHPERIAPSIS);
 
         /*
         StartCoroutine(DoEarthRotation());

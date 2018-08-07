@@ -8,7 +8,7 @@ using System;
 public class CelestialObject : MonoBehaviour
 {
     public static List<GameObject> cellestialobjects = new List<GameObject>();
-    private string[] plidregistrar;
+    private static string[] plidregistrar;
     private readonly float DEGREEACC = 1440f;
 
     public GameObject SOI;
@@ -16,43 +16,43 @@ public class CelestialObject : MonoBehaviour
     public float year;
     public double apoapsis;
     public double periapsis;
+    public GameObject body;
+
     public IEnumerator DoDay(/*GameObject body, float day*/)
     {
-        /*while (true)
+        while (true)
         {
             if (StellarMovement.paused == true)
             {
                 yield return null;
             }
-            for (int _i = 0; _i <= DEGREEACC * _day / StellarMovement.timescale; _i++)
+            for (int _i = 0; _i <= DEGREEACC * day / StellarMovement.timescale; _i++)
             {
-                _body.transform.Rotate(new Vector3(0, 360/DEGREEACC), Space.Self);
-                yield return new WaitForSeconds(_day/DEGREEACC); //Delays the function appropriately for the degree of accuracy, day length and of course 360 degrees.
+                body.transform.Rotate(new Vector3(0, 360/DEGREEACC), Space.Self);
+                yield return new WaitForSeconds(day/DEGREEACC); //Delays the function appropriately for the degree of accuracy, day length and of course 360 degrees.
                 //For example, Earth day is equal to 5 seconds and this coroutine needs to run 1440 times a second, so the delay would be roughly 3.4ms.
             }
-        }*/
+        }
         yield return 1;
 
     }
-    public IEnumerator DoTest()
-    {
-        print("ayy lmao it seems that your test works for some reason.");
-        yield return new WaitForEndOfFrame();
-    }
+   
 
-    public CelestialObject(GameObject _body, GameObject _SOI, float _day, float _year, double _apoapsis, double _periapsis)
+    public void BuildCelestialObject(GameObject _body, GameObject _SOI, float _day, float _year, double _apoapsis, double _periapsis)
     {
-        print(_body.name);
-        cellestialobjects.Add(_body); //Creates a cellestial object under the specified cellestial ID passed through to the function.
+        body = _body;
+        print(body.name);
+        cellestialobjects.Add(body); //Creates a cellestial object under the specified cellestial ID passed through to the function.
         print(_day);
 
-        this.SOI = _SOI;
-        this.year = _year;
-        this.day = _day;
-        this.apoapsis = _apoapsis;
-        this.periapsis = _periapsis;
-        StartCoroutine(DoTest());
+        SOI = _SOI;
+        year = _year;
+        day = _day;
+        apoapsis = _apoapsis;
+        periapsis = _periapsis;
+        StartCoroutine(DoDay());
     }
+
     private float[] CalcPosition(GameObject body, GameObject SOI, float day, float year, double apoapsis, double periapsis, float degree)
     {
         float _xoffset, _yoffset, _zoffset; //How much to offset on the X axis; will be passed to the movement function
