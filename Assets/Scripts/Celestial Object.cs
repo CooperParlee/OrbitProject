@@ -9,7 +9,7 @@ public class CelestialObject : MonoBehaviour
 {
     public static List<GameObject> cellestialobjects = new List<GameObject>();
     private static string[] plidregistrar;
-    private readonly float DEGREEACC = 1440f;
+    private readonly float DEGREEACC = 0.025f;
 
     public GameObject SOI;
     public float day;
@@ -20,49 +20,74 @@ public class CelestialObject : MonoBehaviour
 
     public IEnumerator DoDay(/*GameObject body, float day*/)
     {
+        float projrot = 360 / day * DEGREEACC;
+        float projdel = projrot / 360 * day;
+        print("Projected rotation: " + projrot);
+        print("Projected delay: " + projdel);
         while (true)
         {
             if (StellarMovement.paused == true)
             {
                 yield return null;
             }
-            for (int _i = 0; _i <= DEGREEACC * day / StellarMovement.timescale; _i++)
+            for (int _i = 0; _i <= day / DEGREEACC * StellarMovement.timescale; _i++) // Checked
             {
-                body.transform.Rotate(new Vector3(0, 360/DEGREEACC), Space.Self);
-                yield return new WaitForSeconds(day/DEGREEACC); //Delays the function appropriately for the degree of accuracy, day length and of course 360 degrees.
+                if (StellarMovement.paused == true)
+                {
+                    _i -= 1;
+                    break;
+                }
+                
+                body.transform.Rotate(new Vector3(0, projrot), Space.Self);
+                yield return new WaitForSeconds(projdel); //Delays the function appropriately for the degree of accuracy, day length and of course 360 degrees.
                 //For example, Earth day is equal to 5 seconds and this coroutine needs to run 1440 times a second, so the delay would be roughly 3.4ms.
             }
         }
-        yield return 1;
+        
 
     }
-   
+    public IEnumerator DoOrbit()
+    {
+        while (true)
+        {
+            for(int _i = 0; _i <= DEGREEACC * year / StellarMovement.timescale; _i++)
+            {
+                if (StellarMovement.paused == true)
+                {
+                    _i -= 1;
+                    break;
+                }
+                print(_i);
+                Vector3 move = CalcPosition(body, SOI, day, year, apoapsis, periapsis, _i/4*StellarMovement.timescale, 0);
+
+                body.transform.position = SOI.transform.position + move;
+                yield return new WaitForSeconds(360/DEGREEACC/90);
+            }
+            yield return new WaitForSeconds(year / DEGREEACC);
+        }
+    }
 
     public void BuildCelestialObject(GameObject _body, GameObject _SOI, float _day, float _year, double _apoapsis, double _periapsis)
     {
         body = _body;
-        print(body.name);
         cellestialobjects.Add(body); //Creates a cellestial object under the specified cellestial ID passed through to the function.
-        print(_day);
-
         SOI = _SOI;
         year = _year;
         day = _day;
         apoapsis = _apoapsis;
         periapsis = _periapsis;
         StartCoroutine(DoDay());
+        //StartCoroutine(DoOrbit());
     }
 
-    private float[] CalcPosition(GameObject body, GameObject SOI, float day, float year, double apoapsis, double periapsis, float degree)
+    private Vector3 CalcPosition(GameObject body, GameObject SOI, float day, float year, double apoapsis, double periapsis, float degree, float degreeofnodeascension)
     {
-        float _xoffset, _yoffset, _zoffset; //How much to offset on the X axis; will be passed to the movement function
+        float _xoffset, _yoffset = 0, _zoffset; //How much to offset on the X, Y, Z axis; will be passed to the movement function
+        float apdifferential =  (float)(apoapsis - periapsis);
+        _xoffset = Mathf.Sin(degree/90) * apdifferential * (float) 0.5 + (float) periapsis;
 
-        _xoffset = Mathf.Sin(degree);
-        float percentapoapsis = (degree + 180) / 360;  //Finds how close the body is to 180--which will always be its apoapsis, unfortunately.
-        float periapsialoffset = percentapoapsis * (float)(apoapsis - periapsis); //Multiplies that by the difference of the apoapsial radii and the periapsial radii then adds the periapsial radii.
-        _yoffset = Mathf.Cos(degree) * ((float)periapsis + periapsialoffset);
-        _zoffset = 0;
-        float[] offset = {_xoffset, _yoffset, _zoffset};
+        _zoffset = Mathf.Cos(degree/90) * (apdifferential) + (float)periapsis;
+        Vector3 offset = new Vector3(_xoffset, _yoffset, _zoffset);
         return offset;
     }
     
