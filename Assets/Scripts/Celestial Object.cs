@@ -57,10 +57,10 @@ public class CelestialObject : MonoBehaviour
                     _i -= 1;
                     break;
                 }
-                print(_i);
+                print("Orbit degree reported: " + _i / 4 * StellarMovement.timescale);
                 Vector3 move = CalcPosition(body, SOI, day, year, apoapsis, periapsis, _i/4*StellarMovement.timescale, 0);
 
-                body.transform.position = SOI.transform.position + move;
+                //body.transform.position = SOI.transform.position + move;
                 yield return new WaitForSeconds(360/DEGREEACC/90);
             }
             yield return new WaitForSeconds(year / DEGREEACC);
@@ -80,7 +80,7 @@ public class CelestialObject : MonoBehaviour
         //StartCoroutine(DoOrbit());
     }
 
-    private Vector3 CalcPosition(GameObject body, GameObject SOI, float day, float year, double apoapsis, double periapsis, float degree, float degreeofnodeascension)
+    private static Vector3 CalcPosition(GameObject body, GameObject SOI, float day, float year, double apoapsis, double periapsis, float degree, float degreeofnodeascension)
     {
         float _xoffset, _yoffset = 0, _zoffset; //How much to offset on the X, Y, Z axis; will be passed to the movement function
         float apdifferential =  (float)(apoapsis - periapsis);
