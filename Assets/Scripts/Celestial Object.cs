@@ -22,8 +22,6 @@ public class CelestialObject : MonoBehaviour
     {
         float projrot = 360 / day * DEGREEACC;
         float projdel = projrot / 360 * day;
-        print("Projected rotation: " + projrot);
-        print("Projected delay: " + projdel);
         while (true)
         {
             if (StellarMovement.paused == true)
@@ -43,27 +41,35 @@ public class CelestialObject : MonoBehaviour
                 //For example, Earth day is equal to 5 seconds and this coroutine needs to run 1440 times a second, so the delay would be roughly 3.4ms.
             }
         }
-        
-
     }
+
     public IEnumerator DoOrbit()
     {
+        float projrot = 360 / year * DEGREEACC;
+        float projdel = projrot / 360 * year;
+
         while (true)
         {
-            for(int _i = 0; _i <= DEGREEACC * year / StellarMovement.timescale; _i++)
+            for(int _i = 0; _i <= year / DEGREEACC / StellarMovement.timescale; _i++)
             {
                 if (StellarMovement.paused == true)
                 {
                     _i -= 1;
                     break;
                 }
-                print("Orbit degree reported: " + _i / 4 * StellarMovement.timescale);
-                Vector3 move = CalcPosition(body, SOI, day, year, apoapsis, periapsis, _i/4*StellarMovement.timescale, 0);
+                Vector3 newpos;
+                float apdifferential = (float)(apoapsis - periapsis);
+                double _x, _y = 0, _z;
 
-                //body.transform.position = SOI.transform.position + move;
-                yield return new WaitForSeconds(360/DEGREEACC/90);
+                float currot = _i * projrot;
+                _x = Mathf.Sin(currot/90) * apdifferential * 0.5f + periapsis;
+                _z = Mathf.Cos(currot/90) * apdifferential * 0.5f + periapsis;
+
+                newpos = new Vector3((float)_x + SOI.transform.position.x, (float)_y + SOI.transform.position.y, (float)_z + SOI.transform.position.z);
+                body.transform.position = newpos;
+                yield return new WaitForSeconds(projdel);
             }
-            yield return new WaitForSeconds(year / DEGREEACC);
+            yield return new WaitForSeconds(projdel);
         }
     }
 
@@ -77,7 +83,7 @@ public class CelestialObject : MonoBehaviour
         apoapsis = _apoapsis;
         periapsis = _periapsis;
         StartCoroutine(DoDay());
-        //StartCoroutine(DoOrbit());
+        StartCoroutine(DoOrbit());
     }
 
     private static Vector3 CalcPosition(GameObject body, GameObject SOI, float day, float year, double apoapsis, double periapsis, float degree, float degreeofnodeascension)
@@ -90,6 +96,4 @@ public class CelestialObject : MonoBehaviour
         Vector3 offset = new Vector3(_xoffset, _yoffset, _zoffset);
         return offset;
     }
-    
-    
 }

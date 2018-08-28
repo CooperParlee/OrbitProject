@@ -19,7 +19,7 @@ public class StellarMovement : MonoBehaviour
     private readonly float EARTHDAYPROPORTIONAL = 5f;
     public readonly float ORBITDEGREES = 360f;
     public readonly float SUNDAYPROPORTIONAL = 26.6f;
-    public readonly float MOONORBITPROPORTIONAL = -25.322f;
+    public readonly float MOONORBITPROPORTIONAL = 25.322f;
     public readonly float EARTHORBITPROPORTIONAL = 365.25f;
     public readonly float MOONDAYPROPORTIONAL = 27f;
 
